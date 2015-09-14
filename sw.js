@@ -60,8 +60,8 @@ function injectBody(tpl, body, req, title) {
     // - stream expanded template parts / components as soon as they are
     //   available.
     tpl = tpl.replace(/Test/g, title.replace(/[<"']/g, s => escapes[s]));
-    // Styles
-    tpl = tpl.replace(/modules=/, 'modules=ext.cite.style%7C');
+    // Append parsoid and cite css modules
+    tpl = tpl.replace(/modules=([^&])&/, 'modules=$1%7Cmediawiki.skinning.content.parsoid%7Cext.cite.style&');
     tpl = tpl.replace(/\/wiki\//g, '/w/iki/');
     return replaceContent(tpl, cheapBodyInnerHTML(body));
 }
