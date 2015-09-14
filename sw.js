@@ -11,7 +11,8 @@ self.addEventListener('install', function(event) {
         caches.open(CACHE_NAME)
         .then(cache =>
             fetch(tplURL, { credentials: 'include' })
-            .then(res => replaceContent(res.text(), ''))
+            .then(res => res.text())
+            .then(tpl => replaceContent(tpl, ''))
             .then(body => cache.put(tplURL, new Response(body))))
     );
 });
@@ -61,7 +62,7 @@ function injectBody(tpl, body, req, title) {
     //   available.
     tpl = tpl.replace(/Test/g, title.replace(/[<"']/g, s => escapes[s]));
     // Append parsoid and cite css modules
-    tpl = tpl.replace(/modules=([^&])&/, 'modules=$1%7Cmediawiki.skinning.content.parsoid%7Cext.cite.style&');
+    tpl = tpl.replace(/modules=([^&]+)&/, 'modules=$1%7Cmediawiki.skinning.content.parsoid%7Cext.cite.style&');
     tpl = tpl.replace(/\/wiki\//g, '/w/iki/');
     return replaceContent(tpl, cheapBodyInnerHTML(body));
 }
